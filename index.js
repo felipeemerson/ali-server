@@ -24,14 +24,15 @@ app.post('/aliexpress-product-price', async (req, res) => {
 
     try {
         const html = await response.data;
+
+        console.log(`Html: ${html.substring(0, 50)}...`);
+
         const dataStr = html.match(/data: ({.+})/)?.[1];
         const data = JSON.parse(dataStr);
 
         console.log(`Keys of data: ${Object.keys(data)}`);
         
         const index = data.skuModule.skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
-
-        console.log(`Keys of the item: ${Object.keys(data.skuModule.skuPriceList[index])}`);
     
         const skuVal = data.skuModule.skuPriceList[index].skuVal;
     
