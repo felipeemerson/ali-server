@@ -37,6 +37,7 @@ app.post('/aliexpress-product-price', async (req, res) => {
         
         const index = skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
     
+        console.log(`skuPrice Object keys: ${Object.keys(skuPriceList[index])}`);
         const skuVal = skuPriceList[index].skuVal;
     
         const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
