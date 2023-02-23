@@ -22,19 +22,26 @@ app.post('/aliexpress-product-price', async (req, res) => {
 
     const response = await axios.get(urlFormatted, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' } });
 
-    const html = await response.data;
+    try {
+        const html = await response.data;
+        const dataStr = html.match(/data: ({.+})/)?.[1];
+        const data = JSON.parse(dataStr);
 
-    const dataStr = html.match(/data: ({.+})/)?.[1];
-
-    const data = JSON.parse(dataStr);
+        console.log(`Data: ${data}`);
+        
+        const index = data.skuModule.skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
     
-    const index = data.skuModule.skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
+        const skuVal = data.skuModule.skuPriceList[index].skuVal;
+    
+        const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
 
-    const skuVal = data.skuModule.skuPriceList[index].skuVal;
+        console.log(`Price: ${price}`);
+    
+        return res.send({ price });
+    } catch (error) {
+        return res.status(400).send(`Something goes wrong... ${error.message}`);
+    }
 
-    const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
-
-    return res.send({ price });
 });
 
 app.get('*', async (req, res) => {
