@@ -14,7 +14,7 @@ app.get('/', async (req, res) => {
     '</div>');
 });
 
-app.get('/aliexpress-product-price', async (req, res) => {
+app.post('/aliexpress-product-price', async (req, res) => {
     const { url, product_options } = req.body;
 
     var urlFormatted = url.replace("pt.aliexpress.com", "aliexpress.com");
