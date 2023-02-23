@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const axios = require('axios');
 const app = express();
 
 app.use(cors());
@@ -16,8 +17,8 @@ app.get('/', async (req, res) => {
 app.get('/aliexpress-product-price', async (req, res) => {
     const { url, product_options } = req.body;
 
-    const response = await fetch(url);
-    const html = await response.text();
+    const response = await axios.get(url);
+    const html = await response.data;
 
     const dataStr = html.match(/data: ({.+})/)?.[1];
 
