@@ -28,13 +28,16 @@ app.post('/aliexpress-product-price', async (req, res) => {
         console.log(`Html: ${html.substring(0, 50)}...`);
 
         const dataStr = html.match(/data: ({.+})/)?.[1];
-        const data = JSON.parse(dataStr);
 
+        const data = JSON.parse(dataStr);
         console.log(`Keys of data: ${Object.keys(data)}`);
+
+        const skuPriceList = data.skuModule.skuPriceList;
+        console.log(`skuPriceList size: ${skuPriceList.length}`);
         
-        const index = data.skuModule.skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
+        const index = skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
     
-        const skuVal = data.skuModule.skuPriceList[index].skuVal;
+        const skuVal = skuPriceList[index].skuVal;
     
         const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
 
