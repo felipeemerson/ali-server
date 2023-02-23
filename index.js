@@ -16,9 +16,12 @@ app.get('/', async (req, res) => {
 
 app.post('/aliexpress-product-price', async (req, res) => {
     const { url, product_options } = req.body;
-
+ 
     var urlFormatted = url.replace("pt.aliexpress.com", "aliexpress.com");
+    var urlFormatted = url.replace(/\?.*/, "");  // remove any query params
     urlFormatted += "?gatewayAdapt=glo2usa&_randl_shipto=BR&_randl_currency=BRL";
+
+    console.log(`URL: ${urlFormatted}`);
 
     const response = await axios.get(urlFormatted, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' } });
 
@@ -30,19 +33,15 @@ app.post('/aliexpress-product-price', async (req, res) => {
         const dataStr = html.match(/data: ({.+})/)?.[1];
 
         const data = JSON.parse(dataStr);
-        console.log(`Keys of data: ${Object.keys(data)}`);
 
         const skuPriceList = data.skuModule.skuPriceList;
         console.log(`skuPriceList size: ${skuPriceList.length}`);
         
         const index = skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
-    
-        console.log(`skuPrice Object keys: ${Object.keys(skuPriceList[index])}`);
+
         const skuVal = skuPriceList[index].skuVal;
     
         const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
-
-        console.log(`Price: ${price}`);
     
         return res.send({ price });
     } catch (error) {
