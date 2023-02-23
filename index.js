@@ -20,7 +20,7 @@ app.get('/aliexpress-product-price', async (req, res) => {
     var urlFormatted = url.replace("pt.aliexpress.com", "aliexpress.com");
     urlFormatted += "?gatewayAdapt=glo2usa&_randl_shipto=BR&_randl_currency=BRL";
 
-    const response = await axios.get(urlFormatted);
+    const response = await axios.get(urlFormatted, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' } });
 
     const html = await response.data;
 
