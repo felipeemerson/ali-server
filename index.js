@@ -17,7 +17,9 @@ app.get('/', async (req, res) => {
 app.get('/aliexpress-product-price', async (req, res) => {
     const { url, product_options } = req.body;
 
-    const response = await axios.get(url);
+    
+
+    const response = await axios.get(url, { headers: { 'Accept-Language': 'pt-BR' }});
     const html = await response.data;
 
     const dataStr = html.match(/data: ({.+})/)?.[1];
