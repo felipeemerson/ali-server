@@ -28,7 +28,7 @@ app.post('/aliexpress-product-price', async (req, res) => {
     try {
         const html = await response.data;
 
-        console.log(`Html: ${html.substring(0, 50)}...`);
+        console.log(`Html:\n${html}...`); //.substring(0, 50)
 
         const dataStr = html.match(/data: ({.+})/)?.[1];
 
