@@ -27,23 +27,23 @@ app.post('/aliexpress-product-price', async (req, res) => {
 
     try {
         const html = await response.data;
-
         console.log(`Html:\n${html.substring(0, 50)}...`);
 
         const dataStr = html.match(/data: ({.+})/)?.[1];
-
         const data = JSON.parse(dataStr);
 
         const skuPriceList = data.skuModule.skuPriceList;
         console.log(`skuPriceList size: ${skuPriceList.length}`);
         
         const index = skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
-
         const skuVal = skuPriceList[index].skuVal;
-    
         const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
+
+        const firstShippingOption = data.shippingModule.generalFreightInfo.originalLayoutResultList[0].bizData;
+        const isShippingFree = firstShippingOption.shippingFee === "free";
+        const shippingValue = isShippingFree ? 0 : firstShippingOption.displayAmount;
     
-        return res.send({ price });
+        return res.send({ price, shipping_value: shippingValue });
     } catch (error) {
         return res.status(400).send(`Something goes wrong... ${error.message}`);
     }
