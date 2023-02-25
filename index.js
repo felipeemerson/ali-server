@@ -40,7 +40,7 @@ app.post('/aliexpress-product-price', async (req, res) => {
         const productOptionsIdList = productSKUPropertyList.map((skuProp, index) => {
             console.log(`currentSkuPropValuesListSize: ${skuProp.skuPropertyValues.length}, currentProductSKUPropertyListIndex: ${index}`);
             const skuPropertyId = skuProp.skuPropertyId;
-            const skuPropertyValueIndex = product_options[index] - 1;
+            const skuPropertyValueIndex = product_options[index];
             const skuPropertyValueId = skuProp.skuPropertyValues[skuPropertyValueIndex].propertyValueId;
             const skuOptionIdPair = `${skuPropertyId}:${skuPropertyValueId}`;
 
