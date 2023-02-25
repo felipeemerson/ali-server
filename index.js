@@ -33,9 +33,21 @@ app.post('/aliexpress-product-price', async (req, res) => {
         const data = JSON.parse(dataStr);
 
         const skuPriceList = data.skuModule.skuPriceList;
+        const productSKUPropertyList = data.skuModule.productSKUPropertyList;
         console.log(`skuPriceList size: ${skuPriceList.length}`);
+        console.log(`productSKUPropertyList size: ${productSKUPropertyList.length}`);
         
-        const index = skuPriceList.findIndex(sku => product_options.map(t => sku.skuAttr.includes(t)).every(Boolean));
+        const productOptionsIdList = productSKUPropertyList.map((skuProp, index) => {
+            console.log(`currentSkuPropValuesListSize: ${skuProp.skuPropertyValues.length}, currentProductSKUPropertyListIndex: ${index}`);
+            const skuPropertyId = skuProp.skuPropertyId;
+            const skuPropertyValueIndex = product_options[index] - 1;
+            const skuPropertyValueId = skuProp.skuPropertyValues[skuPropertyValueIndex].propertyValueId;
+            const skuOptionIdPair = `${skuPropertyId}:${skuPropertyValueId}`;
+
+            return skuOptionIdPair;
+        });
+        
+        const index = skuPriceList.findIndex(sku => productOptionsIdList.map(t => sku.skuAttr.includes(t)).every(Boolean));
         const skuVal = skuPriceList[index].skuVal;
         const price = skuVal.isActivity ? skuVal.skuActivityAmount.value : skuVal.skuAmount.value;
 
