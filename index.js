@@ -53,6 +53,10 @@ app.post("/aliexpress-product-price", async (req, res) => {
         );
         const skuPropertyId = skuProp.skuPropertyId;
         const skuPropertyValueIndex = product_options[index];
+
+        // If option is not visible, then return empty, and empty will be true in line 70
+        if (!skuPropertyValueIndex) return "";
+
         const skuPropertyValueIdLong =
           skuProp.skuPropertyValues[skuPropertyValueIndex].propertyValueIdLong;
         const skuOptionIdPair = `${skuPropertyId}:${skuPropertyValueIdLong}`;
@@ -64,6 +68,7 @@ app.post("/aliexpress-product-price", async (req, res) => {
     const index = skuPriceList.findIndex((sku) =>
       productOptionsIdList.map((t) => sku.skuAttr.includes(t)).every(Boolean)
     );
+
     const skuVal = skuPriceList[index].skuVal;
     const price = skuVal.isActivity
       ? skuVal.skuActivityAmount.value
