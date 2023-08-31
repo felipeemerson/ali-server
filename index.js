@@ -39,8 +39,8 @@ app.post("/aliexpress-product-price", async (req, res) => {
     const dataStr = html.match(/data: ({.+})/)?.[1];
     const data = JSON.parse(dataStr);
 
-    const skuPriceList = data.skuModule.skuPriceList;
-    const productSKUPropertyList = data.skuModule.productSKUPropertyList;
+    const skuPriceList = data.priceComponent.skuPriceList;
+    const productSKUPropertyList = data.skuComponent.productSKUPropertyList;
     console.log(`skuPriceList size: ${skuPriceList.length}`);
     console.log(
       `productSKUPropertyList size: ${productSKUPropertyList.length}`
@@ -73,10 +73,9 @@ app.post("/aliexpress-product-price", async (req, res) => {
     const price = skuVal.isActivity
       ? skuVal.skuActivityAmount.value
       : skuVal.skuAmount.value;
-
+    
     const firstShippingOption =
-      data.shippingModule.generalFreightInfo.originalLayoutResultList[0]
-        .bizData;
+      data.webGeneralFreightCalculateComponent.originalLayoutResultList[0].bizData;
     const isShippingFree = firstShippingOption.shippingFee === "free";
     const shippingValue = isShippingFree
       ? 0
