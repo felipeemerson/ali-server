@@ -19,8 +19,8 @@ app.get("/", async (req, res) => {
 app.post("/aliexpress-product-price", async (req, res) => {
   const { url, product_options } = req.body;
 
-  var urlFormatted = url.replace("pt.aliexpress.com", "aliexpress.com");
-  urlFormatted = urlFormatted.replace(/\/?\?.*|\/$/, ""); // remove any query params
+  //var urlFormatted = url.replace("pt.aliexpress.com", "aliexpress.com");
+  var urlFormatted = url.replace(/\/?\?.*|\/$/, ""); // remove any query params
   urlFormatted += "?gatewayAdapt=glo2usa&_randl_shipto=BR&_randl_currency=BRL";
 
   console.log(`URL: ${urlFormatted}`);
